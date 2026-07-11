@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>PUN Loader Generator</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #121212;
+            padding: 30px;
+            border-radius: 8px;
+            width: 500px;
+            border: 1px solid #222222;
+        }
+        h2 {
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        input, textarea {
+            width: 100%;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #333333;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: monospace;
+        }
+        button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Script Loader Generator</h2>
+        
+        <label>ลิงก์หลอกที่ต้องการให้เด้งไป (Decoy URL):</label>
+        <input type="text" id="decoyUrl" placeholder="google.com">
+        
+        <label>วางสคริปต์ Lua ของคุณที่นี่ (Roblox Script):</label>
+        <textarea id="luaScript" rows="8" placeholder="print('Hello World')"></textarea>
+        
+        <button onclick="generateWebpage()">GENERATE CODE</button>
+    </div>
+
+    <script>
+        function generateWebpage() {
+            let decoy = document.getElementById("decoyUrl").value;
+            const lua = document.getElementById("luaScript").value;
+            
+            if (!/^https?:\/\//i.test(decoy)) {
+                decoy = "https://" + decoy;
+            }
+            
+            const output = `--[[\n<!DOCTYPE html>\n<html>\n<head>\n<script>\nwindow.location.replace("${decoy}");\n<\/script>\n<\/head>\n<\/html>\n]]\n${lua}`;
+            
+            const textArea = document.createElement("textarea");
+            textArea.value = output;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            textArea.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+            document.body.removeChild(textArea);
+
+            document.open();
+            document.write(output);
+            document.close();
+        }
+    </script>
+</body>
+</html>
