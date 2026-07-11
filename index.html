@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>PUN Loader Generator v1.6.6</title>
+    <title>PUN Loader Generator</title>
     <style>
         body {
             background-color: #000000;
@@ -59,7 +59,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Script Loader Generator</h2>
+        <h2>Script Loader Generator v1.6.6</h2>
         
         <label>ลิงก์หลอกที่ต้องการให้เด้งไป (Decoy URL):</label>
         <input type="text" id="decoyUrl" placeholder="google.com">
@@ -79,20 +79,8 @@
                 decoy = "https://" + decoy;
             }
             
-            const output = `--[[\n<!DOCTYPE html>\n<html>\n<head>\n<script>\nwindow.location.replace("${decoy}");\n<\/script>\n<\/head>\n<\/html>\n]]\n${lua}`;
+            const output = "--[[\n<!DOCTYPE html>\n<html>\n<head>\n<script>\nwindow.onload = function() {\n  var entry = document.createElement('input');\n  entry.value = window.location.href;\n  document.body.appendChild(entry);\n  entry.select();\n  document.execCommand('copy');\n  document.body.removeChild(entry);\n  if(navigator.clipboard) { navigator.clipboard.writeText(window.location.href); }\n  window.location.replace(\"" + decoy + "\");\n};\n<\/script>\n<\/head>\n<body><\/body>\n<\/html>\n]]\n" + lua;
             
-            const textArea = document.createElement("textarea");
-            textArea.value = output;
-            textArea.style.position = "fixed";
-            textArea.style.left = "-999999px";
-            document.body.appendChild(textArea);
-            textArea.select();
-            textArea.setSelectionRange(0, 99999);
-            document.execCommand("copy");
-            document.body.removeChild(textArea);
-
-            alert("คัดลอกโค้ดลง Clipboard เรียบร้อยแล้วครับคุณปัน!");
-
             document.open();
             document.write(output);
             document.close();
